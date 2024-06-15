@@ -85,7 +85,7 @@ pipeline {
             steps {
             
                 // Crear un fichero de texto con algún contenido
-                sh 'echo "Este es un cambio para asegurar que haya cambios en la rama" > cambio.txt'
+                sh 'echo "Este es un cambio para asegurar que haya cambios en la rama 1" > cambio.txt'
                 
                 sh 'git add cambio.txt'
                 
@@ -103,6 +103,7 @@ pipeline {
                  // Checkout a la rama master y mergear
                 sh '''
                 git remote set-url origin https://${GITHUB_TOKEN}@github.com/leyrecanales10/todo-list-aws.git
+                git clean -f
                 git checkout master
                 git pull origin master
                 git merge origin/develop
