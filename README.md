@@ -78,7 +78,6 @@ sam logs -n GetTodoFunction --stack-name todo-list-aws-staging
 ```
 
 ## Tests
-
 Se encuentran en la carpeta `test` que tiene la siguiente estructura:
 ```
 - test
