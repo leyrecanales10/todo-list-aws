@@ -106,7 +106,11 @@ pipeline {
                 git clean -f
                 git checkout master
                 git pull origin master
-                git merge -Xtheirs origin/develop
+                git merge origin/develop
+		// Eliminar el archivo JenkinsfileCI
+                git rm JenkinsfileCI
+		// Confirmar la eliminación
+                git commit -m "Elimina JenkinsfileCI durante merge"
                 git push origin master
                 '''
             }
