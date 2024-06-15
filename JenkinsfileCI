@@ -85,7 +85,7 @@ pipeline {
             steps {
             
                 // Crear un fichero de texto con algún contenido
-                sh 'echo "Este es un cambio para asegurar que haya cambios en la rama 3" > cambio.txt'
+                sh 'echo "Este es un cambio para asegurar que haya cambios en la rama 4" > cambio.txt'
                 
                 sh 'git add cambio.txt'
                 
