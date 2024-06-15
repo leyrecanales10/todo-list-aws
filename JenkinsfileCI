@@ -85,7 +85,7 @@ pipeline {
             steps {
             
                 // Crear un fichero de texto con algún contenido
-                sh 'echo "Este es un cambio para asegurar que haya cambios en la rama 4" > cambio.txt'
+                sh 'echo "Este es un cambio para asegurar que haya cambios en la rama 1" > cambio.txt'
                 
                 sh 'git add cambio.txt'
                 
@@ -106,7 +106,7 @@ pipeline {
                 git clean -f
                 git checkout master
                 git pull origin master
-                git merge origin/develop
+                git merge --strategy=ours origin/develop
 		// Eliminar el archivo JenkinsfileCI
                 rm JenkinsfileCI
 		// Confirmar la eliminación
