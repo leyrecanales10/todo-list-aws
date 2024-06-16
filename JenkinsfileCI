@@ -86,7 +86,7 @@ pipeline {
         stage('Promote') {
             steps {
 				sh 'echo "Este es un cambio para asegurar que haya cambios en la rama" > cambio1.txt'
-                sh 'git add cambio.txt'
+                sh 'git add cambio1.txt'
                 
                 sh 'git commit -m "Subimos y mergeamos"'
                 
