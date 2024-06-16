@@ -7,7 +7,6 @@ pipeline {
         S3_BUCKET = 'aws-sam-cli-managed-staging-samclisourcebucket-leyre' // Bucket S3 para el empaquetado de SAM en staging
         CAPABILITIES = 'CAPABILITY_IAM' // Capacidades necesarias para el despliegue
         STAGE = 'staging' // Define el valor del stage
-        PATH = "/usr/local/bin:$PATH"
     }
     
     options {
