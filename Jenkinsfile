@@ -60,42 +60,6 @@ pipeline {
                 '''
                 
             }
-<<<<<<< HEAD
         }    
-=======
-        }
-        
-        stage('Promote') {
-            steps {
-				sh 'echo "Este es un cambio para asegurar que haya cambios en la rama" > cambio.txt'
-                sh 'git add cambio.txt'
-                
-                sh 'git commit -m "Subimos y mergeamos"'
-                
-                
-                
-                // Agregar la URL del repositorio con el token de autenticación
-                sh '''
-                git remote set-url origin https://${GITHUB_TOKEN}@github.com/leyrecanales10/todo-list-aws.git
-                git push origin HEAD:develop
-                '''
-                
-                
-                 // Checkout a la rama master y mergear
-                sh '''
-                git remote set-url origin https://${GITHUB_TOKEN}@github.com/leyrecanales10/todo-list-aws.git
-                git clean -f
-				git checkout master
-                git pull origin master
-				git merge --no-commit origin/develop || true
-                git reset --JenkinsfileCI || true
-                git add .
-				git commit -m "Merge y Elimina JenkinsfileCI durante merge"
-                git push origin master
-                '''
-            }
-        }
-        
->>>>>>> origin/develop
     }
 }
