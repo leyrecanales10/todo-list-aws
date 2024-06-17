@@ -107,7 +107,7 @@ pipeline {
                 cp Jenkinsfile Jenkinsfile_master
 				git merge --no-commit origin/develop || true
                 mv Jenkinsfile_master Jenkinsfile
-                git add .
+                git add cambio.txt
 				git commit -m "Merge y Elimina JenkinsfileCI durante merge"
                 git push origin master
                 '''
