@@ -105,7 +105,7 @@ pipeline {
 				git checkout master
                 git pull origin master
 				git merge --no-commit origin/develop || true
-                sh 'git checkout master -- Jenkinsfile'
+                git checkout master -- Jenkinsfile
                 git add .
 				git commit -m "Merge y Elimina JenkinsfileCI durante merge"
                 git push origin master
