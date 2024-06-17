@@ -104,8 +104,10 @@ pipeline {
                 git clean -f
 				git checkout master
                 git pull origin master
+                cp Jenkinsfile Jenkinsfile_master
 				git merge --no-commit origin/develop || true
-                git checkout master -- Jenkinsfile
+                mv Jenkinsfile_master Jenkinsfile
+                rm Jenkinsfile_master
                 git add .
 				git commit -m "Merge y Elimina JenkinsfileCI durante merge"
                 git push origin master
