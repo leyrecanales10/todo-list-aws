@@ -3,10 +3,17 @@ pipeline {
     environment {
         GITHUB_TOKEN = credentials('TOKEN_CP1D')  // El ID de la credencial que creaste
         AWS_REGION = 'us-east-1' // Define tu región de AWS
+<<<<<<< HEAD
         STACK_NAME = 'todo-list-aws-production' // Nombre del stack de CloudFormation para production
         S3_BUCKET = 'aws-sam-cli-managed-production-samclisourcebucket-leyre' // Bucket S3 para el empaquetado de SAM en production
         CAPABILITIES = 'CAPABILITY_IAM' // Capacidades necesarias para el despliegue
         STAGE = 'production' // Define el valor del stage
+=======
+        STACK_NAME = 'todo-list-aws-staging' // Nombre del stack de CloudFormation para staging
+        S3_BUCKET = 'aws-sam-cli-managed-staging-samclisourcebucket-leyre' // Bucket S3 para el empaquetado de SAM en staging
+        CAPABILITIES = 'CAPABILITY_IAM' // Capacidades necesarias para el despliegue
+        STAGE = 'staging' // Define el valor del stage
+>>>>>>> origin/develop
     }
     
     options {
@@ -18,7 +25,11 @@ pipeline {
         stage('Get Code') {
             steps {
                 //Obtener codigo del repositorio
+<<<<<<< HEAD
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://${env.GITHUB_TOKEN}@github.com/leyrecanales10/todo-list-aws.git']]])
+=======
+                checkout([$class: 'GitSCM', branches: [[name: '*/develop']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://${env.GITHUB_TOKEN}@github.com/leyrecanales10/todo-list-aws.git']]])
+>>>>>>> origin/develop
                 sh '''
                     echo $WORKSPACE
                     whoami
@@ -26,8 +37,46 @@ pipeline {
                 '''
 
 				stash name: 'code', includes: '**'
+<<<<<<< HEAD
             }
         }
+=======
+            
+            }
+        }
+        
+        stage('Static Test'){
+            parallel{
+                stage('Flake8'){
+                    agent { label 'Nodo1' }
+		            steps{
+		                unstash 'code'
+                        sh 'flake8 --exit-zero --format=pylint src > flake8.out'
+			            recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], qualityGates: [[threshold: 100, type: 'TOTAL', unstable: true], [threshold: 200, type: 'TOTAL', unstable: false]]
+		                sh '''
+                            echo $WORKSPACE
+                            whoami
+                            hostname
+                        '''
+		            }
+		        }
+
+	            stage('Bandit'){
+	                agent { label 'Nodo1' }
+	                steps{
+	                    unstash 'code'
+                        sh 'bandit --exit-zero -r src -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: {severity}: {test_id}: {msg}"'
+				        recordIssues tools: [pyLint(name: 'Bandit', pattern: 'bandit.out')], qualityGates: [[threshold: 100, type: 'TOTAL', unstable: true], [threshold: 200, type: 'TOTAL', unstable: false]]
+			            sh '''
+                            echo $WORKSPACE
+                            whoami
+                            hostname
+                        '''
+				    }
+		        }
+		    }
+	    }
+>>>>>>> origin/develop
 	    
 	    stage('Deploy'){
 	        steps{
@@ -40,18 +89,30 @@ pipeline {
 	            
 	            echo "Despliegue"
                 sh "sam deploy --stack-name ${env.STACK_NAME} --s3-bucket ${env.S3_BUCKET} --capabilities ${env.CAPABILITIES} --region ${env.AWS_REGION} --no-confirm-changeset  --no-fail-on-empty-changeset --parameter-overrides Stage=${STAGE} --template-file template.yaml"
+<<<<<<< HEAD
 		        
 		        sh '''
                     echo $WORKSPACE
                     whoami
                     hostname
                 '''	
+=======
+                sh '''
+                    echo $WORKSPACE
+                    whoami
+                    hostname
+                '''		    
+>>>>>>> origin/develop
 		    }
 	        
 	    }
 	    
 	    stage('Rest Test') {
+<<<<<<< HEAD
 	        agent { label 'Nodo1' }
+=======
+	        agent { label 'Nodo2' }
+>>>>>>> origin/develop
             steps {
                 unstash 'code'
                 // Obtener los outputs del stack usando AWS CLI y exportar la URL como una variable de entorno
@@ -71,7 +132,11 @@ pipeline {
                 echo "Variable generada BASE_URL=${BASE_URL}"
                 
                 echo "Ejecutamos los test"
+<<<<<<< HEAD
                 BASE_URL=${BASE_URL} pytest test/integration/todoApiTest.py -k "test_api_gettodo or test_api_listtodos"
+=======
+                BASE_URL=${BASE_URL} pytest test/integration/todoApiTest.py
+>>>>>>> origin/develop
                 '''
                 sh '''
                     echo $WORKSPACE
@@ -81,6 +146,47 @@ pipeline {
             }
         }
         
+<<<<<<< HEAD
+=======
+        stage('Promote') {
+            steps {
+				sh 'echo "Este es un cambio para asegurar que haya cambios en la rama" > cambio1.txt'
+                sh 'git add cambio1.txt'
+                
+                sh 'git commit -m "Subimos y mergeamos"'
+                
+                
+                
+                // Agregar la URL del repositorio con el token de autenticación
+                sh '''
+                git remote set-url origin https://${GITHUB_TOKEN}@github.com/leyrecanales10/todo-list-aws.git
+                git push origin HEAD:develop
+                '''
+                
+                
+                 // Checkout a la rama master y mergear
+                sh '''
+                git remote set-url origin https://${GITHUB_TOKEN}@github.com/leyrecanales10/todo-list-aws.git
+                git clean -f
+				git checkout master
+                git pull origin master
+                cp Jenkinsfile Jenkinsfile_master
+				git merge --no-commit origin/develop || true
+                mv Jenkinsfile_master Jenkinsfile
+                git add .
+				git commit -m "Merge y Elimina JenkinsfileCI durante merge"
+                git push origin master
+                '''
+                
+                sh '''
+                    echo $WORKSPACE
+                    whoami
+                    hostname
+                '''	
+            }
+        }
+        
+>>>>>>> origin/develop
         stage('Limpieza agente principal'){
 		    agent any
             steps{
@@ -96,5 +202,17 @@ pipeline {
 
             }
         }
+<<<<<<< HEAD
+=======
+        
+        stage('Limpieza agente secundario 2'){
+		    agent { label 'Nodo2' }
+            steps{
+				deleteDir()
+
+            }
+        }
+        
+>>>>>>> origin/develop
     }
 }
