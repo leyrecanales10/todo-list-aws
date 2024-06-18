@@ -150,5 +150,29 @@ pipeline {
             }
         }
         
+        stage('Limpieza agente principal'){
+		    agent any
+            steps{
+				deleteDir()
+
+            }
+        }
+
+        stage('Limpieza agente secundario 1'){
+		    agent { label 'Nodo1' }
+            steps{
+				deleteDir()
+
+            }
+        }
+        
+        stage('Limpieza agente secundario 2'){
+		    agent { label 'Nodo2' }
+            steps{
+				deleteDir()
+
+            }
+        }
+        
     }
 }
