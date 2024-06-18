@@ -115,8 +115,8 @@ pipeline {
         
         stage('Promote') {
             steps {
-				sh 'echo "Este es un cambio para asegurar que haya cambios en la rama" > cambio1.txt'
-                sh 'git add cambio1.txt'
+				sh 'echo "Este es un cambio para asegurar que haya cambios en la rama" > cambio2.txt'
+                sh 'git add cambio2.txt'
                 
                 sh 'git commit -m "Subimos y mergeamos"'
                 
@@ -136,8 +136,10 @@ pipeline {
 				git checkout master
                 git pull origin master
                 cp Jenkinsfile Jenkinsfile_master
+                cp Jenkinsfile_agentes Jenkinsfile_master_agentes
 				git merge --no-commit origin/develop || true
                 mv Jenkinsfile_master Jenkinsfile
+                mv Jenkinsfile_master_agentes Jenkinsfile_agentes
                 git add .
 				git commit -m "Merge y Elimina JenkinsfileCI durante merge"
                 git push origin master
