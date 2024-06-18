@@ -31,9 +31,9 @@ pipeline {
         }
         
         stage('Static Test'){
-            agent { label 'Nodo1' }
             parallel{
                 stage('Flake8'){
+                    agent { label 'Nodo1' }
 		            steps{
 		                unstash 'code'
                         sh 'flake8 --exit-zero --format=pylint src > flake8.out'
@@ -47,6 +47,7 @@ pipeline {
 		        }
 
 	            stage('Bandit'){
+	                agent { label 'Nodo1' }
 	                steps{
 	                    unstash 'code'
                         sh 'bandit --exit-zero -r src -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: {severity}: {test_id}: {msg}"'
