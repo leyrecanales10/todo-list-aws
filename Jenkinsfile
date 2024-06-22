@@ -41,7 +41,7 @@ pipeline {
                     steps {
                         dir('main-repo') {
                             sh 'flake8 --exit-zero --format=pylint src > flake8.out'
-                            recordIssues tools: [flake8(name: 'Flake8', pattern: 'main-repo/flake8.out')], qualityGates: [[threshold: 100, type: 'TOTAL', unstable: true], [threshold: 200, type: 'TOTAL', unstable: false]]
+                            recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], qualityGates: [[threshold: 100, type: 'TOTAL', unstable: true], [threshold: 200, type: 'TOTAL', unstable: false]]
                         }
                     }
                 }
@@ -50,7 +50,7 @@ pipeline {
                     steps {
                         dir('main-repo') {
                             sh 'bandit --exit-zero -r src -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: {severity}: {test_id}: {msg}"'
-                            recordIssues tools: [pyLint(name: 'Bandit', pattern: 'main-repo/bandit.out')], qualityGates: [[threshold: 100, type: 'TOTAL', unstable: true], [threshold: 200, type: 'TOTAL', unstable: false]]
+                            recordIssues tools: [pyLint(name: 'Bandit', pattern: 'bandit.out')], qualityGates: [[threshold: 100, type: 'TOTAL', unstable: true], [threshold: 200, type: 'TOTAL', unstable: false]]
                         }
                     }
                 }
@@ -59,14 +59,17 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                echo "Construcción"
-                sh 'sam build'
+                dir('main-repo') {
+                    echo "Construcción"
+                    sh 'sam build'
                     
-                echo "Validación"
-                sh 'sam validate --template main-repo/template.yaml --region ${AWS_REGION}'
+                    echo "Validación"
+                    sh 'sam validate --template template.yaml --region ${AWS_REGION}'
                     
-                echo "Despliegue"
-                sh "sam deploy --config-file ${SAMCONFIG_PATH} --config-env staging --template-file main-repo/template.yaml"
+                    echo "Despliegue"
+                    sh "sam deploy --config-file ${SAMCONFIG_PATH} --config-env staging --template-file template.yaml"
+                }
+                
                 
             }
         }
