@@ -43,7 +43,7 @@ pipeline {
                     sh 'sam validate --template template.yaml --region ${AWS_REGION}'
                     
                     echo "Despliegue"
-                    sh "sam deploy --config-file ../${SAMCONFIG_PATH} --config-env production --template-file template.yaml"
+                    sh "sam deploy --config-file ../${SAMCONFIG_PATH} --config-env production --template-file template.yaml --no-fail-on-empty-changeset"
                 }
 		    }
 	        
