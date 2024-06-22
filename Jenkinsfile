@@ -93,7 +93,7 @@ pipeline {
                     echo "Variable generada BASE_URL=${BASE_URL}"
                     
                     echo "Ejecutamos los test"
-                    BASE_URL=${BASE_URL} pytest main-repo/test/integration/todoApiTest.py
+                    BASE_URL=${BASE_URL} pytest test/integration/todoApiTest.py
                     '''
                 }
             }
