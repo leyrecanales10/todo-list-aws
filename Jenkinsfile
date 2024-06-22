@@ -3,10 +3,7 @@ pipeline {
     environment {
         GITHUB_TOKEN = credentials('TOKEN_CP1D')  // El ID de la credencial que creaste
         AWS_REGION = 'us-east-1' // Define tu región de AWS
-        STACK_NAME = 'todo-list-aws-production' // Nombre del stack de CloudFormation para production
-        S3_BUCKET = 'aws-sam-cli-managed-production-samclisourcebucket-leyre' // Bucket S3 para el empaquetado de SAM en production
-        CAPABILITIES = 'CAPABILITY_IAM' // Capacidades necesarias para el despliegue
-        STAGE = 'production' // Define el valor del stage
+        SAMCONFIG_PATH = 'samconfig.toml'
     }
     
     options {
@@ -19,6 +16,9 @@ pipeline {
             steps {
                 //Obtener codigo del repositorio
                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://${env.GITHUB_TOKEN}@github.com/leyrecanales10/todo-list-aws.git']]])
+               
+               //Obtener codigo del repositorio configuracion
+               checkout([$class: 'GitSCM', branches: [[name: '*/production']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://${env.GITHUB_TOKEN}@github.com/leyrecanales10/todo-list-aws-config.git']]])
             }
         }
 	    
@@ -32,7 +32,7 @@ pipeline {
 	            sh 'sam validate --template template.yaml --region ${AWS_REGION}'
 	            
 	            echo "Despliegue"
-                sh "sam deploy --stack-name ${env.STACK_NAME} --s3-bucket ${env.S3_BUCKET} --capabilities ${env.CAPABILITIES} --region ${env.AWS_REGION} --no-confirm-changeset  --no-fail-on-empty-changeset --parameter-overrides Stage=${STAGE} --template-file template.yaml"
+                sh "sam deploy --config-file ${SAMCONFIG_PATH} --config-env production --template-file template.yaml"
 		    }
 	        
 	    }
