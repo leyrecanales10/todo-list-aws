@@ -40,7 +40,7 @@ pipeline {
                 stage('Flake8') {
                     steps {
                         dir('main-repo') {
-                            sh 'flake8 --exit-zero --format=pylint src > main-repo/flake8.out'
+                            sh 'flake8 --exit-zero --format=pylint src > flake8.out'
                             recordIssues tools: [flake8(name: 'Flake8', pattern: 'main-repo/flake8.out')], qualityGates: [[threshold: 100, type: 'TOTAL', unstable: true], [threshold: 200, type: 'TOTAL', unstable: false]]
                         }
                     }
@@ -49,7 +49,7 @@ pipeline {
                 stage('Bandit') {
                     steps {
                         dir('main-repo') {
-                            sh 'bandit --exit-zero -r src -f custom -o main-repo/bandit.out --severity-level medium --msg-template "{abspath}:{line}: {severity}: {test_id}: {msg}"'
+                            sh 'bandit --exit-zero -r src -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: {severity}: {test_id}: {msg}"'
                             recordIssues tools: [pyLint(name: 'Bandit', pattern: 'main-repo/bandit.out')], qualityGates: [[threshold: 100, type: 'TOTAL', unstable: true], [threshold: 200, type: 'TOTAL', unstable: false]]
                         }
                     }
