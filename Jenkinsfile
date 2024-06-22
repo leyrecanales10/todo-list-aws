@@ -67,7 +67,7 @@ pipeline {
                     sh 'sam validate --template template.yaml --region ${AWS_REGION}'
                     
                     echo "Despliegue"
-                    sh "sam deploy --config-file ../${SAMCONFIG_PATH} --config-env staging --template-file template.yaml"
+                    sh "sam deploy --config-file ../${SAMCONFIG_PATH} --config-env staging --template-file template.yaml --no-fail-on-empty-changeset"
                 }
                 
                 
@@ -102,8 +102,8 @@ pipeline {
         stage('Promote') {
             steps {
                 dir('main-repo') {
-                    sh 'echo "Este es un cambio para asegurar que haya cambios en la rama" > cambio3.txt'
-                    sh 'git add cambio3.txt'
+                    sh 'echo "Este es un cambio para asegurar que haya cambios en la rama" > cambio4.txt'
+                    sh 'git add cambio4.txt'
                     
                     sh 'git commit -m "Subimos y mergeamos"'
                     
