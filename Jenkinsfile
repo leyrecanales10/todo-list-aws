@@ -57,7 +57,7 @@ pipeline {
                     echo "Obtenemos la url"
                     sh '''
                     #!/bin/bash
-                    outputs=$(aws cloudformation describe-stacks --stack-name ${STACK_NAME} --query "Stacks[0].Outputs")
+                    outputs=$(aws cloudformation describe-stacks --stack-name todo-list-aws-production --query "Stacks[0].Outputs")
 
                     # Extraer la URL específica del output (BaseUrlApi)
                     url=$(echo "$outputs" | grep '"OutputKey": "BaseUrlApi"' -A1 | grep '"OutputValue"' | cut -d '"' -f 4)
