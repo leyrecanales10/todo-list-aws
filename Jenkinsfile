@@ -107,12 +107,6 @@ pipeline {
                     
                     sh 'git commit -m "Subimos y mergeamos"'
                     
-                    // Agregar la URL del repositorio con el token de autenticación
-                    sh '''
-                    git remote set-url origin https://${GITHUB_TOKEN}@github.com/leyrecanales10/todo-list-aws.git
-                    git push origin HEAD:develop
-                    '''
-                    
                     // Checkout a la rama master y mergear
                     sh '''
                     git remote set-url origin https://${GITHUB_TOKEN}@github.com/leyrecanales10/todo-list-aws.git
